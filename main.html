@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Logiciel d'acquisition</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="pure-min.css">
+		<link rel="stylesheet" href="style.css">
+		<script src='zepto.js'></script>
+		<meta charset="utf-8">
+
+	</head>
+	<body>
+		<div class='pure-g'>
+			<div class="pure-u-3-5" style='padding-top: 1em'>
+				<form class="pure-form pure-form-aligned">
+					<fieldset>
+						<div class="pure-control-group">
+							<label for="name">Nom</label>
+							<input id="name" type="text" placeholder="Dupont">
+						</div>
+
+						<div class="pure-control-group">
+							<label for="date">Date</label>
+							<input id="date" disabled>
+						</div>
+						<div class="pure-control-group">
+							<label for="connect">Port de connexion</label>
+							<select id="connect"></select>
+						</div>
+						<div class="pure-control-group">
+							<label for="status">Status</label>
+							<input id="status" disabled value="non connecté"/>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="pure-u-2-5" style="text-align: center">
+
+				<div id='count' style="font-size: 120px;font-family: sans">
+					00
+				</div>
+				<div id='sum' style="font-size: 20px;font-family: monospace">
+					<span id='total'>0</span> ms
+				</div>
+			</div>
+
+		</div>
+		<div class='pure-g'>
+			<div class="pure-u-3-5">
+				<button class="pure-button button-success" id='new'>
+					Nouveau
+				</button>
+			</div>
+			<div class="pure-u-2-5" >
+				<button  class="pure-button button-error" id='cancel'>
+					Annuler
+				</button>
+				<button class="pure-button button-secondary" style='float: right' id='start'>
+					Démarrer
+				</button>
+			</div>
+		</div>
+		<script src='main.js'></script>
+	</body>
+</html>
