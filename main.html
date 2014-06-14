@@ -21,7 +21,7 @@
 
 						<div class="pure-control-group">
 							<label for="date">Date</label>
-							<input id="date" disabled>
+							<input id="date" readonly>
 						</div>
 						<div class="pure-control-group">
 							<label for="connect">Port de connexion</label>
@@ -29,7 +29,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label for="status">Status</label>
-							<input id="status" disabled value="non connecté"/>
+							<input id="status" readonly value="non connecté"/>
 						</div>
 					</fieldset>
 				</form>
@@ -39,8 +39,8 @@
 				<div id='count' style="font-size: 120px;font-family: sans">
 					00
 				</div>
-				<div id='sum' style="font-size: 20px;font-family: monospace">
-					<span id='total'>0</span> ms
+				<div style="font-size: 10px;font-family: monospace">
+					<span id='total'>0</span> ms / <span id='sum'>0</span> ms
 				</div>
 			</div>
 
@@ -50,11 +50,12 @@
 				<button class="pure-button button-success" id='new'>
 					Nouveau
 				</button>
+					<button class="pure-button button-warning" id='save'>
+					Enregistrer
+				</button>
+				<span><span id='people'>0</span> acquisitions</span>
 			</div>
 			<div class="pure-u-2-5" >
-				<button  class="pure-button button-error" id='cancel'>
-					Annuler
-				</button>
 				<button class="pure-button button-secondary" style='float: right' id='start'>
 					Démarrer
 				</button>

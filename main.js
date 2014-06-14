@@ -1,17 +1,25 @@
+var results = [];
+var id = 0;
+var count = 0;
+var sum = 0;
+var isStarted = false;
+var currentStatus = 'non connecté';
+
 $(function() {
 	var buf = new ArrayBuffer(1);
 	var bufView = new Uint8Array(buf);
 	bufView[0] = 0;
-	var count = 0;
 
 	var setup = function() {
 		count = 0;
-		$('#date').attr('value', new Date().toISOString());
+		$('#date').val(new Date().toISOString());
 		$('#count').text(count);
-		$('#status').val('connexion...');
-		chrome.serial.send(aConnectionId, buf, function() {
-			$('#status').val('connecté');
-		});
+		$('#status').val(currentStatus);
+		sum = 0;
+		$('#total').text(0);
+		$('#sum').text(0);
+		isStarted = false;
+		$('#status').val(currentStatus);
 	};
 
 	var aConnectionId;
@@ -32,7 +40,8 @@ $(function() {
 			aConnectionId = connectionInfo.connectionId;
 			$('#status').val('connexion...');
 			chrome.serial.send(aConnectionId, buf, function() {
-				$('#status').val('connecté');
+				currentStatus = 'connecté';
+				$('#status').val(currentStatus);
 			});
 		}
 	};
@@ -40,13 +49,31 @@ $(function() {
 	var onReceiveCallback = function(info) {
 		if (info.connectionId == aConnectionId && info.data) {
 			$('#status').val('réception');
+			if (isStarted) {
+				var uint8View = new Uint8Array(info.data);
+				if (255 == uint8View[0]) {
+					isStarted = false;
+					currentStatus = 'temps dépassé';
+				} else {
+					$('#total').text(uint8View[0] * 10);
+					sum += uint8View[0] * 10;
+					$('#sum').text(sum);
+					count++;
+					$('#count').text(count - 1);
+					if (60 < count) {
+						isStarted = false;
+						currentStatus = 'comptage atteint';
+					}
+					if (1 < count)
+						results[id][count] = uint8View[0];
+					console.log(results);
+				}
+			} else {
+				currentStatus = 'non démarré';
+			}
 			setTimeout(function() {
-				$('#status').val('connecté');
+				$('#status').val(currentStatus);
 			}, 200);
-			var uint8View = new Uint8Array(info.data);
-			$('#total').text(uint8View[0] * 10);
-			count++;
-			$('#count').text(count);
 		}
 	};
 
@@ -54,10 +81,51 @@ $(function() {
 	chrome.serial.onReceive.addListener(onReceiveCallback);
 
 	$('#new').click(function() {
+		$('#name').val('')
+		$('#name').prop("readonly",false);
 		setup();
-	});
-	$('#cancel').click(function() {
-		setup();
+		id++;
+		$('#people').text(id);
 	});
 
+	$('#start').click(function() {
+		setup();
+		results[id] = new Array(62);
+		results[id][0] = $('#date').val();
+		results[id][1] = $('#name').val();
+		$('#name').prop("readonly",true);
+		chrome.serial.send(aConnectionId, buf, function() {
+			currentStatus = "démarré";
+			$('#status').val(currentStatus);
+			isStarted = true;
+		});
+	});
+
+	$('#save').click(function() {
+		chrome.fileSystem.chooseEntry({
+			type : 'saveFile',
+			suggestedName : 'data' + $('#date').val() + '.csv'
+		}, function(writableFileEntry) {
+			writableFileEntry.createWriter(function(writer) {
+				writer.onwriteend = function(e) {
+					$('#status').val("données enregistrées");
+				};
+				var csv = '';
+
+				results.forEach(function(row, j) {
+					row.forEach(function(col, j) {
+						csv += col + ';'
+					});
+					csv += '\n';
+				});
+				console.log(csv);
+				writer.write(new Blob([csv], {
+					type : 'text/plain'
+				}));
+			}, function() {
+				console.log("error writing");
+			});
+		});
+	});
 });
+
