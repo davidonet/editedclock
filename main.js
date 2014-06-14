@@ -26,7 +26,7 @@ $(function() {
 	$('#date').attr('value', new Date().toISOString());
 	var onGetDevices = function(ports) {
 		for (var i = 0; i < ports.length; i++) {
-			$('#connect').prepend('<option>' + ports[i].path + '</option>')
+			$('#connect').prepend('<option>' + ports[i].path + '</option>');
 		}
 		$('#connect').prepend("<option/>");
 		$('#connect').change(function() {
@@ -42,6 +42,7 @@ $(function() {
 			chrome.serial.send(aConnectionId, buf, function() {
 				currentStatus = 'connecté';
 				$('#status').val(currentStatus);
+				$('#connect').attr('readonly', true);
 			});
 		}
 	};
@@ -66,7 +67,6 @@ $(function() {
 					}
 					if (1 < count)
 						results[id][count] = uint8View[0];
-					console.log(results);
 				}
 			} else {
 				currentStatus = 'non démarré';
@@ -82,23 +82,28 @@ $(function() {
 
 	$('#new').click(function() {
 		$('#name').val('')
-		$('#name').prop("readonly",false);
+		$('#name').prop("readonly", false);
 		setup();
 		id++;
 		$('#people').text(id);
 	});
 
 	$('#start').click(function() {
-		setup();
-		results[id] = new Array(62);
-		results[id][0] = $('#date').val();
-		results[id][1] = $('#name').val();
-		$('#name').prop("readonly",true);
-		chrome.serial.send(aConnectionId, buf, function() {
-			currentStatus = "démarré";
+		if ($('#name').val() != '') {
+			setup();
+			results[id] = new Array(62);
+			results[id][0] = $('#date').val();
+			results[id][1] = $('#name').val();
+			$('#name').prop("readonly", true);
+			chrome.serial.send(aConnectionId, buf, function() {
+				currentStatus = "démarré";
+				$('#status').val(currentStatus);
+				isStarted = true;
+			});
+		} else {
+			currentStatus = "pas de nom !";
 			$('#status').val(currentStatus);
-			isStarted = true;
-		});
+		}
 	});
 
 	$('#save').click(function() {
@@ -118,7 +123,6 @@ $(function() {
 					});
 					csv += '\n';
 				});
-				console.log(csv);
 				writer.write(new Blob([csv], {
 					type : 'text/plain'
 				}));
