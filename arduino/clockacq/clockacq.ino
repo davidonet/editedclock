@@ -12,7 +12,7 @@ void loop() {
   if(digitalRead(11)==LOW){
     if(!ispushed){
       unsigned long b = millis();
-      
+
       ispushed = true;
       if(t==0){
         Serial.write(0);
@@ -32,7 +32,7 @@ void loop() {
     digitalWrite(13,LOW); 
     ispushed=false;
   }
-    if (Serial.available()) {
+  if (Serial.available()) {
     // read the most recent byte (which will be from 0 to 255):
     if(0 == Serial.read()){
       t=0;
@@ -40,7 +40,11 @@ void loop() {
       delay(200);
     }
   }
+  else { 
+    delay(30);
+  }
 }
+
 
 
 
