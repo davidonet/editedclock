@@ -3,8 +3,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
 		bounds : {
 			top : 0,
 			left : 0,
-			width : 500,
-			height : 234
+			width : 640,
+			height : 216
 		}
 	});
 })
