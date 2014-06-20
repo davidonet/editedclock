@@ -56,8 +56,8 @@ $(function() {
 					isStarted = false;
 					currentStatus = 'temps dépassé';
 				} else {
-					$('#total').text(uint8View[0] * 10);
-					sum += uint8View[0] * 10;
+					$('#total').text(uint8View[0] * 20);
+					sum += uint8View[0] * 20;
 					$('#sum').text(sum);
 					count++;
 					$('#count').text(count - 1);
