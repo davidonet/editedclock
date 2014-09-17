@@ -2,7 +2,7 @@
 	"name": "ClockAcquisititionSoftware",
 	"version": "1.0",
 	"manifest_version": 2,
-	"minimum_chrome_version": "23",
+	"minimum_chrome_version": "33",
 	"description": "Logiciel d'acquisition pour le projet Horloge modifiée",
 
 	"app": {
