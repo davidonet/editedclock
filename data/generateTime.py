@@ -31,7 +31,7 @@ while( 0<secondMissing and 0<timeMissing):
 	timeMissing -=  (aSec+bSec)
 
 sample.sort()
-sample[0] += timeMissing
+sample[-1] += timeMissing
 
 random.shuffle(sample)
 
@@ -40,10 +40,10 @@ def transformToBytes(val):
 	b1 = (val >> 16) & 255
 	b2 = (val >> 8) & 255
 	b3 = val & 255
-	return bytes([b0,b1,b2,b3])
+	return bytes([b3,b3,b1,b0])
 
 myBytes = [ transformToBytes(i) for i in sample]
 myData = b''.join(myBytes)
-with open('test.dat','wb') as rawfile:
+with open('test04.dat','wb') as rawfile:
 	rawfile.write(myData)
 	rawfile.flush()
